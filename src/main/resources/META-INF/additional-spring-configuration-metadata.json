@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "ted.database.schema",
+      "type": "java.lang.String",
+      "description": "Description for ted.database.schema."
+    }
+  ] }
