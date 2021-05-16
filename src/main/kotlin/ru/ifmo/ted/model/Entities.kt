@@ -19,7 +19,7 @@ data class Person(
 
 }
 
-data class Event(
+data class Talk(
     @Id
     val id: Long?,
     val title: String,
@@ -32,7 +32,7 @@ data class Event(
     }
 
     fun getRequestWithId(value: Long): Request? {
-        return  requests.find { it.id == value }
+        return requests.find { it.id == value }
     }
 }
 
