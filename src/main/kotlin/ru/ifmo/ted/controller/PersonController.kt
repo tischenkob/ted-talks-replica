@@ -7,18 +7,17 @@ import ru.ifmo.ted.model.Notification
 import ru.ifmo.ted.model.Person
 import ru.ifmo.ted.repository.NotificationRepository
 import ru.ifmo.ted.repository.PersonRepository
+import ru.ifmo.ted.service.PersonService
 import java.security.Principal
 
 
 @RestController
 @RequestMapping("/api/people")
-class PersonController(val personRepository: PersonRepository) {
+class PersonController(val personService: PersonService) {
 
     @GetMapping("/notifications")
-    fun getNotificationsForPersonWithId(principal: Principal): Set<Notification> {
-        val username = principal.name
-        val currentUser = personRepository.findByUsername(username)!!
-        return currentUser.notifications
+    fun getNotifications(principal: Principal): Set<Notification> {
+        return personService.getNotifications(principal)
     }
 
 }
