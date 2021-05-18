@@ -2,29 +2,25 @@ package ru.ifmo.ted.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import ru.ifmo.ted.security.XmlUserDetailsService
 import javax.sql.DataSource
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(val dataSource: DataSource) : WebSecurityConfigurerAdapter() {
+    private val xmlPath = "/security/user-auth.xml"
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
+    fun passwordEncoder(): PasswordEncoder = NoOpPasswordEncoder.getInstance()
 
-    override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth!!.jdbcAuthentication()
-            .dataSource(dataSource)
-            .usersByUsernameQuery("SELECT username, password, enabled FROM ted.person WHERE username = ?")
-            .authoritiesByUsernameQuery("SELECT username, role FROM ted.person WHERE username = ?")
-    }
+    @Bean
+    override fun userDetailsService(): UserDetailsService = XmlUserDetailsService(xmlPath)
 
     override fun configure(http: HttpSecurity?) {
         http!!.authorizeRequests()
