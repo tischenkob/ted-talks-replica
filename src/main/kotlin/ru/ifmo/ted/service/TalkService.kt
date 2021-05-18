@@ -2,53 +2,46 @@ package ru.ifmo.ted.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import ru.ifmo.ted.model.Talk
-import ru.ifmo.ted.model.Notification
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 import ru.ifmo.ted.model.Request
+import ru.ifmo.ted.model.Talk
 import ru.ifmo.ted.repository.TalkRepository
-import ru.ifmo.ted.repository.PersonRepository
-import java.security.Principal
 
 @Service
-class TalkService(
-    val talkRepository: TalkRepository,
-    val personRepository: PersonRepository,
-) {
+class TalkService(val talkRepository: TalkRepository) {
+    private val pending = Request.State.PENDING
+    private val approved = Request.State.APPROVED
+    private val denied = Request.State.DENIED
+
+    val pendingAndDeniedTransitions: Map<Request.State, Long> = mapOf(
+        pending to 0,
+        approved to 1,
+        denied to 0
+    )
+    val approvedTransitions: Map<Request.State, Long> = mapOf(
+        pending to -1,
+        approved to 0,
+        denied to -1
+    )
 
     fun getAllTalks(): MutableIterable<Talk> {
         return talkRepository.findAll()
     }
 
-    fun getRequestsForEventWith(id: Long): Set<Request> {
-        val talk = talkRepository.findByIdOrNull(id) ?: throw IllegalStateException("Talk does not exist")
-        return talk.requests
+    fun findById(value: Long): Talk {
+        return talkRepository.findByIdOrNull(value) ?: throw IllegalStateException("Talk does not exist")
     }
 
-    fun updateRequestWithState(id: Long, requestId: Long, state: String) {
-        val talk = talkRepository.findByIdOrNull(id) ?: throw IllegalStateException("Talk does not exist")
-        val request = talk.getRequestWithId(requestId) ?: throw IllegalStateException("Request does not exist")
-        request.state = Request.State.valueOf(state)
-        talkRepository.save(talk)
-
-        onRequestStateChanged(requestId, talk, state)
+    @Transactional(propagation = Propagation.MANDATORY)
+    fun changeSpeakerCounterValue(talk: Talk, oldState: Request.State, newState: Request.State) {
+        var transitions: Map<Request.State, Long> = pendingAndDeniedTransitions
+        if (oldState == approved) transitions = approvedTransitions
+        talk.requestCounter += transitions[newState]!!
     }
 
-    private fun onRequestStateChanged(requestId: Long, talk: Talk, state: String) {
-        val person = personRepository.findByRequestId(requestId)
-        val notification = Notification("Your request to attend ${talk.title} has been ${state.toLowerCase()}.")
-        person.add(notification)
-        personRepository.save(person)
-    }
-
-    fun postRequestForTalkWith(id: Long, principal: Principal) {
-        val username = principal.name
-        val person = personRepository.findByUsername(username)!! // !! is safe since the person must be authenticated
-        val talk = talkRepository.findByIdOrNull(id) ?: throw IllegalStateException("There is no such talk")
-        
-        val request = Request(person)
-        talk.add(request)
+    fun save(talk: Talk) {
         talkRepository.save(talk)
     }
-
 
 }
