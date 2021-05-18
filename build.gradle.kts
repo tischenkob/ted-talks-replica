@@ -31,6 +31,10 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
+
+	implementation("jakarta.xml.bind:jakarta.xml.bind-api:3.0.0")
+	implementation("org.eclipse.persistence:org.eclipse.persistence.moxy:3.0.0")
+
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
