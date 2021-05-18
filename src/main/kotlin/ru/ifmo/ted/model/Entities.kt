@@ -26,13 +26,22 @@ data class Talk(
     val planned: LocalDate?,
     val description: String,
     val requests: MutableSet<Request>,
+    var requestCounter: Long
 ) {
     fun add(request: Request) {
         requests.add(request)
     }
 
-    fun getRequestWithId(value: Long): Request? {
-        return requests.find { it.id == value }
+    fun getRequestWithId(value: Long): Request {
+        return requests.find { it.id == value } ?: throw IllegalStateException("Request does not exist")
+    }
+
+    fun addRequestFor(person: Person) {
+        requests.add(Request(person))
+    }
+
+    fun hasRequestFor(person: Person): Boolean {
+        return requests.find { it.personId == person.id } != null
     }
 }
 
