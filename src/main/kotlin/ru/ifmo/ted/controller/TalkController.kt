@@ -7,7 +7,7 @@ import ru.ifmo.ted.model.Talk
 import java.security.Principal
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/api/talks")
 class TalkController(val talkManager: TalkManager) {
 
     @GetMapping
