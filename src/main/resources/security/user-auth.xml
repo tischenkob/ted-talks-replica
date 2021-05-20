@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <users>
-    <user username="bogdan" password="2020">
+    <user username="tischenkob" password="2020">
         <authority>ROLE_USER</authority>
     </user>
     <user username="president" password="2021">
