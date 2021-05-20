@@ -35,5 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
 /src/main/resources/application.properties
 /src/main/resources/application-helios.properties
+/src/main/resources/application.yml
