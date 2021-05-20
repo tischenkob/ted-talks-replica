@@ -35,7 +35,7 @@ class TalkManager(
         changeRequestState(person, talk, request, state)
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, transactionManager = "transactionManager")
     fun changeRequestState(person: Person, talk: Talk, request: Request, state: String) {
         val oldState = request.state
         val newState = requestService.changeRequestState(request, state)

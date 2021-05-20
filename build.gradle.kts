@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    war
     id("org.springframework.boot") version "2.4.4"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.4.31"
@@ -25,14 +26,14 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
 
-
+    // Exclude Tomcat
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    providedRuntime("org.springframework.boot:spring-boot-starter-logging")
 
     implementation("com.sun.xml.bind:jaxb-core:2.3.0.1")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
@@ -50,6 +51,11 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok:1.18.20")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+}
+
+configurations.all {
+    exclude(module = "spring-boot-starter-logging")
+    exclude(module = "logback-classic")
 }
 
 tasks.withType<KotlinCompile> {
