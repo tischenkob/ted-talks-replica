@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "ru.ifmo"
-version = "0.0.1-SNAPSHOT"
+version = "0.2.1"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 configurations {
