@@ -7,9 +7,7 @@ import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration
 import org.springframework.data.relational.core.mapping.NamingStrategy
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.transaction.TransactionManager
 import org.springframework.transaction.jta.JtaTransactionManager
 import javax.sql.DataSource
 
@@ -23,9 +21,6 @@ class JdbcConfiguration(val environment: Environment) : AbstractJdbcConfiguratio
     @Bean
     fun namedParameterJdbcOperations(dataSource: DataSource?): NamedParameterJdbcOperations? =
         NamedParameterJdbcTemplate(dataSource!!)
-
-    @Bean
-    fun transactionManager(dataSource: DataSource?): TransactionManager? = DataSourceTransactionManager(dataSource!!)
 
     @Bean
     fun namingStrategy(): NamingStrategy? {
