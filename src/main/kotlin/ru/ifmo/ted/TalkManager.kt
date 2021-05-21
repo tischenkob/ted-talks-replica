@@ -46,7 +46,7 @@ class TalkManager(
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    fun onRequestStateChanged(event: RequestStateChangedEvent) {
+    fun handle(event: RequestStateChangedEvent) {
         val message = "Your request to attend ${event.title} has been ${event.state.toLowerCase()}."
         notificationService.sendNotification(event.person, message)
     }
