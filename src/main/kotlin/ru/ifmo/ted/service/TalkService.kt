@@ -33,7 +33,7 @@ class TalkService(val talkRepository: TalkRepository) {
         return talkRepository.findByIdOrNull(value) ?: throw IllegalStateException("Talk does not exist")
     }
 
-    @Transactional(propagation = Propagation.MANDATORY, transactionManager = "transactionManager")
+    @Transactional(propagation = Propagation.MANDATORY)
     fun changeSpeakerCounterValue(talk: Talk, oldState: Request.State, newState: Request.State) {
         var transitions: Map<Request.State, Long> = pendingAndDeniedTransitions
         if (oldState == approved) transitions = approvedTransitions
