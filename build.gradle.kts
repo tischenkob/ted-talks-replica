@@ -23,30 +23,44 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-security")
+
+    // Web
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
+    // Kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    // Exclude Tomcat
+    // DB
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    runtimeOnly("org.postgresql:postgresql")
+
+    // JMS
+    implementation("javax.jms:javax.jms-api:2.0.1")
+    implementation("org.springframework:spring-jms")
+    implementation("com.rabbitmq.jms:rabbitmq-jms:2.3.0")
+
+    // Scheduling
+    implementation("org.springframework.boot:spring-boot-starter-quartz")
+
+    // Wildfly
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     providedRuntime("org.springframework.boot:spring-boot-starter-logging")
 
+    // XML
     implementation("com.sun.xml.bind:jaxb-core:2.3.0.1")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
     implementation("com.sun.xml.bind:jaxb-impl:2.3.1")
     implementation("org.javassist:javassist:3.25.0-GA")
 
+    // Development
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
     compileOnly("org.projectlombok:lombok:1.18.20")
     annotationProcessor("org.projectlombok:lombok:1.18.20")
-
     testCompileOnly("org.projectlombok:lombok:1.18.20")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.20")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
