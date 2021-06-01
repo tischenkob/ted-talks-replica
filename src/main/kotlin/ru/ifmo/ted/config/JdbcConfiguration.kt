@@ -22,12 +22,12 @@ class JdbcConfiguration(val environment: Environment) : AbstractJdbcConfiguratio
     fun namedParameterJdbcOperations(dataSource: DataSource?): NamedParameterJdbcOperations? =
         NamedParameterJdbcTemplate(dataSource!!)
 
-    @Bean
-    fun namingStrategy(): NamingStrategy? {
-        return object : NamingStrategy {
-            override fun getSchema(): String {
-                return environment.getProperty("ted.database.schema")!!
-            }
-        }
-    }
+//    @Bean
+//    fun namingStrategy(): NamingStrategy? {
+//        return object : NamingStrategy {
+//            override fun getSchema(): String {
+//                return environment.getProperty("ted.database.schema")!!
+//            }
+//        }
+//    }
 }
