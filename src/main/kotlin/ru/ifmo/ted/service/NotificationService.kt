@@ -1,5 +1,6 @@
 package ru.ifmo.ted.service
 
+import org.springframework.context.annotation.Profile
 import org.springframework.jms.annotation.JmsListener
 import org.springframework.stereotype.Service
 import ru.ifmo.ted.model.Notification
@@ -16,6 +17,7 @@ class NotificationService(val personRepository: PersonRepository) {
         return currentUser.notifications
     }
 
+    @Profile("service")
     @JmsListener(destination = "q_request_notifications")
     fun sendNotification(notificationInfo: Map<String, String>) {
         // it's okay to !! here since this method will be called only by the system and only after auth
