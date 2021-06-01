@@ -16,15 +16,21 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration(val dataSource: DataSource) : WebSecurityConfigurerAdapter() {
+class SecurityConfiguration() : WebSecurityConfigurerAdapter() {
 
     private var xmlFile: File = ClassPathResource("security/user-auth.xml").file
+
+    final lateinit var adminUsernameSet: Set<String>
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = NoOpPasswordEncoder.getInstance()
 
     @Bean
-    override fun userDetailsService(): UserDetailsService = XmlUserDetailsService(xmlFile)
+    override fun userDetailsService(): UserDetailsService {
+        val service = XmlUserDetailsService(xmlFile)
+        adminUsernameSet = service.adminUsernames
+        return service
+    }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth!!.userDetailsService(userDetailsService())
