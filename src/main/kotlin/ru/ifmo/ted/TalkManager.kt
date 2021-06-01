@@ -2,6 +2,7 @@ package ru.ifmo.ted
 
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.jms.core.JmsTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.event.TransactionPhase
@@ -22,7 +23,8 @@ class TalkManager(
     val personService: PersonService,
     val requestService: RequestService,
     val notificationService: NotificationService,
-    val applicationEventPublisher: ApplicationEventPublisher
+    val applicationEventPublisher: ApplicationEventPublisher,
+    val jmsTemplate: JmsTemplate
 ) {
     class RequestStateChangedEvent(source: Any, val person: Person, val title: String, val state: String) :
         ApplicationEvent(source)
@@ -48,7 +50,13 @@ class TalkManager(
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun handle(event: RequestStateChangedEvent) {
         val message = "Your request to attend ${event.title} has been ${event.state.toLowerCase()}."
-        notificationService.sendNotification(event.person, message)
+        jmsTemplate.convertAndSend(
+            "q_request_notifications",
+            mapOf(
+                Pair("username", event.person.username),
+                Pair("message", message)
+            )
+        )
     }
 
     fun postRequestForTalkWithId(value: Long, principal: Principal) {
