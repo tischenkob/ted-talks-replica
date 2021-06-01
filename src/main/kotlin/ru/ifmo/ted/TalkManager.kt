@@ -10,7 +10,6 @@ import org.springframework.transaction.event.TransactionalEventListener
 import ru.ifmo.ted.model.Person
 import ru.ifmo.ted.model.Request
 import ru.ifmo.ted.model.Talk
-import ru.ifmo.ted.service.NotificationService
 import ru.ifmo.ted.service.PersonService
 import ru.ifmo.ted.service.RequestService
 import ru.ifmo.ted.service.TalkService
@@ -22,7 +21,6 @@ class TalkManager(
     val talkService: TalkService,
     val personService: PersonService,
     val requestService: RequestService,
-    val notificationService: NotificationService,
     val applicationEventPublisher: ApplicationEventPublisher,
     val jmsTemplate: JmsTemplate
 ) {
@@ -53,8 +51,8 @@ class TalkManager(
         jmsTemplate.convertAndSend(
             "q_request_notifications",
             mapOf(
-                Pair("username", event.person.username),
-                Pair("message", message)
+                "username" to event.person.username,
+                "message" to message
             )
         )
     }
