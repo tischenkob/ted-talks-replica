@@ -24,6 +24,9 @@ interface TalkRepository : CrudRepository<Talk, Long>
 interface RequestRepository : CrudRepository<Request, Long> {
     @Query("SELECT * FROM request WHERE talk = :event_id")
     fun findByAllEventId(@Param("event_id") value: Long): Set<Request>
+
+    @Query("SELECT * FROM request WHERE state = :state")
+    fun findAllByStateEquals(@Param("state") value: String): Set<Request>
 }
 
 interface NotificationRepository : CrudRepository<Notification, Long> {
