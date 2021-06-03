@@ -9,8 +9,14 @@ plugins {
 }
 
 group = "ru.ifmo"
-version = "0.2.1"
+version = "0.2.9"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+tasks.register<Copy>("bootFly") {
+    dependsOn(tasks.named("bootWar"))
+    from("build/libs")
+    into("deploy/wildfly")
+}
 
 configurations {
     compileOnly {
