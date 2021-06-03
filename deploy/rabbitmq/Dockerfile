@@ -1,0 +1,2 @@
+FROM rabbitmq:3-management
+RUN rabbitmq-plugins enable rabbitmq_jms_topic_exchange rabbitmq_amqp1_0
