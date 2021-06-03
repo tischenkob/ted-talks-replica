@@ -19,7 +19,7 @@ public class XmlUserDetailsService implements UserDetailsService {
     private XmlUserDetailsStore store;
 
     @Getter
-    private final Set<String> adminUsernames = new HashSet<>();
+    public final Set<String> adminUsernames = new HashSet<>();
 
     @Override
     public UserDetails loadUserByUsername(String username) {
