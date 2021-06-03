@@ -2,19 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.1
--- Dumped by pg_dump version 12.7 (Ubuntu 12.7-0ubuntu0.20.10.1)
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
+-- Dumped from database version 13.3 (Debian 13.3-1.pgdg100+1)
+-- Dumped by pg_dump version 13.3 (Debian 13.3-1.pgdg100+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -29,11 +18,97 @@ SET row_security = off;
 
 
 --
--- Name: talk; Type: TABLE; Schema: ; Owner:
+-- Name: event_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE TABLE talk (
-    id bigint NOT NULL,
+CREATE SEQUENCE public.event_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notification_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.notification_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: notification; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.notification (
+    id bigint DEFAULT nextval('public.notification_id_seq'::regclass) NOT NULL,
+    message text NOT NULL,
+    person bigint
+);
+
+
+--
+-- Name: person_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.person_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: person; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.person (
+    id bigint DEFAULT nextval('public.person_id_seq'::regclass) NOT NULL,
+    name character varying(50) NOT NULL,
+    username character varying(50) NOT NULL
+);
+
+
+--
+-- Name: request_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.request_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: request; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.request (
+    id bigint DEFAULT nextval('public.request_id_seq'::regclass) NOT NULL,
+    person bigint,
+    talk bigint,
+    state character varying(24)
+);
+
+
+--
+-- Name: talk; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.talk (
+    id bigint DEFAULT nextval('public.event_id_seq'::regclass) NOT NULL,
     title character varying(100) NOT NULL,
     planned date,
     description text NOT NULL,
@@ -41,236 +116,146 @@ CREATE TABLE talk (
 );
 
 --
--- Name: event_id_seq; Type: SEQUENCE; Schema: ; Owner:
+-- Data for Name: notification; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE event_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-
---
--- Name: notification; Type: TABLE; Schema: ted; Owner: ted
---
-
-CREATE TABLE notification (
-    id bigint NOT NULL,
-    message text NOT NULL,
-    person bigint
-);
-
-
-
---
--- Name: notification_id_seq; Type: SEQUENCE; Schema: ted; Owner: ted
---
-
-CREATE SEQUENCE notification_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-
---
--- Name: person; Type: TABLE; Schema: ted; Owner: ted
---
-
-CREATE TABLE person (
-    id bigint NOT NULL,
-    name character varying(50) NOT NULL,
-    username character varying(50) NOT NULL
-);
-
---
--- Name: person_id_seq; Type: SEQUENCE; Schema: ted; Owner: ted
---
-
-CREATE SEQUENCE person_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: request; Type: TABLE; Schema: ted; Owner: ted
---
-
-CREATE TABLE request (
-    id bigint NOT NULL,
-    person bigint,
-    talk bigint,
-    state character varying(24)
-);
-
---
--- Name: request_id_seq; Type: SEQUENCE; Schema: ted; Owner: ted
---
-
-CREATE SEQUENCE request_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
---
--- Name: notification id; Type: DEFAULT; Schema: ted; Owner: ted
---
-
-ALTER TABLE ONLY notification ALTER COLUMN id SET DEFAULT nextval('notification_id_seq'::regclass);
-
-
---
--- Name: person id; Type: DEFAULT; Schema: ted; Owner: ted
---
-
-ALTER TABLE ONLY person ALTER COLUMN id SET DEFAULT nextval('person_id_seq'::regclass);
-
-
---
--- Name: request id; Type: DEFAULT; Schema: ted; Owner: ted
---
-
-ALTER TABLE ONLY request ALTER COLUMN id SET DEFAULT nextval('request_id_seq'::regclass);
-
-
---
--- Name: talk id; Type: DEFAULT; Schema: ted; Owner: ted
---
-
-ALTER TABLE ONLY talk ALTER COLUMN id SET DEFAULT nextval('event_id_seq'::regclass);
-
-
---
--- Data for Name: notification; Type: TABLE DATA; Schema: ted; Owner: ted
---
-
-COPY notification (id, message, person) FROM stdin;
-7	Your request to attend Spring Data JDBC Conf has been denied.	1
-8	Your request to attend ITMO.DOP has been approved\n.	1
-9	Your request to attend ITMO.BUSINESS_LOGIC has been approved\n.	1
-10	Your request to attend ITMO.BUSINESS_LOGIC has been denied\n.	1
+COPY public.notification (id, message, person) FROM stdin;
+16      Your request to attend Spring Data JDBC Conf has been denied.   1
+17      Your request to attend ITMO.DOP has been approved\n.    1
+18      Your request to attend ITMO.BUSINESS_LOGIC has been approved\n. 1
+19      Your request to attend ITMO.BUSINESS_LOGIC has been denied\n.   1
+300     There are 1 pending requests! Check them!!!     4
+301     There are 2 pending requests! Check them!!!     4
 \.
 
 
 --
--- Data for Name: person; Type: TABLE DATA; Schema: ted; Owner: ted
+-- Data for Name: person; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY person (id, name, username) FROM stdin;
-4	Vladimir	president
-1	Bogdan	tischenkob
-\.
-
---
--- Data for Name: talk; Type: TABLE DATA; Schema: ted; Owner: ted
---
-
-COPY talk (id, title, planned, description, request_counter) FROM stdin;
-1	Spring Data JDBC Conf	2021-04-23	The best thing to ever happen to persistence	0
-3	ITMO.DOP	2021-09-01	A mythical event	0
-2	ITMO.BUSINESS_LOGIC	2021-04-30	One of the scariest topics	0
+COPY public.person (id, name, username) FROM stdin;
+1       Bogdan  tischenkob
+4       Vladimir        president
 \.
 
 
 --
--- Name: event_id_seq; Type: SEQUENCE SET; Schema: ted; Owner: ted
+-- Data for Name: request; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('event_id_seq', 3, true);
-
-
---
--- Name: notification_id_seq; Type: SEQUENCE SET; Schema: ted; Owner: ted
---
-
-SELECT pg_catalog.setval('notification_id_seq', 10, true);
+COPY public.request (id, person, talk, state) FROM stdin;
+7       1       2       PENDING
+6       1       3       APPROVED
+\.
 
 
 --
--- Name: person_id_seq; Type: SEQUENCE SET; Schema: ted; Owner: ted
+-- Data for Name: talk; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('person_id_seq', 2, true);
-
-
---
--- Name: request_id_seq; Type: SEQUENCE SET; Schema: ted; Owner: ted
---
-
-SELECT pg_catalog.setval('request_id_seq', 5, true);
+COPY public.talk (id, title, planned, description, request_counter) FROM stdin;
+1       Spring Data JDBC Conf   2021-04-23      The best thing to ever happen to persistence    0
+2       ITMO.BUSINESS_LOGIC     2021-04-30      One of the scariest topics      0
+3       ITMO.DOP        2021-09-01      A mythical event        1
+\.
 
 
 --
--- Name: talk event_pk; Type: CONSTRAINT; Schema: ted; Owner: ted
+-- Name: event_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY talk
+SELECT pg_catalog.setval('public.event_id_seq', 3, true);
+
+
+--
+-- Name: notification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.notification_id_seq', 301, true);
+
+
+--
+-- Name: person_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.person_id_seq', 2, true);
+
+
+--
+-- Name: request_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.request_id_seq', 7, true);
+
+
+--
+-- Name: event_id_seq; Type: SEQUENCE SET; Schema: ted; Owner: -
+--
+
+SELECT pg_catalog.setval('ted.event_id_seq', 1, false);
+
+
+--
+-- Name: talk event_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.talk
     ADD CONSTRAINT event_pk PRIMARY KEY (id);
 
 
 --
--- Name: notification notification_pk; Type: CONSTRAINT; Schema: ted; Owner: ted
+-- Name: notification notification_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY notification
+ALTER TABLE ONLY public.notification
     ADD CONSTRAINT notification_pk PRIMARY KEY (id);
 
 
 --
--- Name: person person_pk; Type: CONSTRAINT; Schema: ted; Owner: ted
+-- Name: person person_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY person
+ALTER TABLE ONLY public.person
     ADD CONSTRAINT person_pk PRIMARY KEY (id);
 
 
 --
--- Name: request request_pk; Type: CONSTRAINT; Schema: ted; Owner: ted
+-- Name: request request_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY request
+ALTER TABLE ONLY public.request
     ADD CONSTRAINT request_pk PRIMARY KEY (id);
 
 
 --
--- Name: event_description_uindex; Type: INDEX; Schema: ted; Owner: ted
+-- Name: event_description_uindex; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX event_description_uindex ON talk USING btree (description);
-
-
---
--- Name: notification notification_person_id_fk; Type: FK CONSTRAINT; Schema: ted; Owner: ted
---
-
-ALTER TABLE ONLY notification
-    ADD CONSTRAINT notification_person_id_fk FOREIGN KEY (person) REFERENCES person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+CREATE UNIQUE INDEX event_description_uindex ON public.talk USING btree (description);
 
 
 --
--- Name: request request_event_id_fk; Type: FK CONSTRAINT; Schema: ted; Owner: ted
+-- Name: notification notification_person_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY request
-    ADD CONSTRAINT request_event_id_fk FOREIGN KEY (talk) REFERENCES talk(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.notification
+    ADD CONSTRAINT notification_person_id_fk FOREIGN KEY (person) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: request request_person_id_fk; Type: FK CONSTRAINT; Schema: ted; Owner: ted
+-- Name: request request_event_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY request
-    ADD CONSTRAINT request_person_id_fk FOREIGN KEY (person) REFERENCES person(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.request
+    ADD CONSTRAINT request_event_id_fk FOREIGN KEY (talk) REFERENCES public.talk(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: request request_person_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.request
+    ADD CONSTRAINT request_person_id_fk FOREIGN KEY (person) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
